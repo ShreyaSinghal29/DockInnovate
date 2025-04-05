@@ -1,55 +1,61 @@
-🍪 Easy Windows Server Setup on AWS for Beginners
-🌟 What You'll Learn
-How to create a pre-configured Windows server on AWS with:
-✅ Web server (IIS) already installed
-✅ Automatic setup - no manual configuration needed
-✅ Reusable server template
+```markdown
+# 🍪 Easy Windows Server Setup on AWS (For Beginners)
 
-🛠️ What You Need
-A Windows computer
+## 🌟 What You’ll Learn
 
-An AWS account (free tier works)
+This guide walks you through building a reusable, pre-configured Windows Server on AWS with:
 
-About 30 minutes
+✅ IIS (Web Server) pre-installed  
+✅ Automatic setup — no manual steps after launch  
+✅ A reusable Amazon Machine Image (AMI) for future use
 
-🧩 Step 1: Install the Tools
-1. Install Packer (Our Server Builder)
-Download from Packer's website
+---
 
-Unzip and move packer.exe to C:\packer
+## 🧰 What You’ll Need
 
-Add to PATH:
+- A Windows PC  
+- An AWS account (Free Tier is fine)  
+- About 30 minutes  
 
-Press Windows + R, type sysdm.cpl
+---
 
-Go to Advanced → Environment Variables
+## 🔧 Step 1: Install Required Tools
 
-Add C:\packer to Path
+### 1️⃣ Install Packer
 
-2. Install AWS CLI
-Download from AWS CLI page
+- [Download Packer](https://developer.hashicorp.com/packer/downloads)  
+- Extract `packer.exe` to `C:\packer`  
+- Add `C:\packer` to your system **PATH**:
+  - Press `Windows + R`, type `sysdm.cpl`, hit Enter  
+  - Go to **Advanced → Environment Variables**  
+  - Under **System Variables**, edit the `Path` and add `C:\packer`
 
-Run the installer (just click Next)
+### 2️⃣ Install AWS CLI
 
-3. Set Up AWS Keys
-powershell
-Copy
+- Download the installer from the [AWS CLI page](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-windows.html)  
+- Run the installer (click Next through the steps)
+
+### 3️⃣ Set Up AWS CLI Credentials
+
+Open PowerShell and run:
+
+```powershell
 aws configure
+```
+
 Enter:
+- **AWS Access Key ID**  
+- **AWS Secret Access Key**  
+- **Default Region Name**: `us-east-1`  
+- **Output Format**: `json`
 
-Your AWS Access Key
+---
 
-Your AWS Secret Key
+## 📝 Step 2: Create Your Server Recipe
 
-Region: us-east-1
+### 📄 Create a file: `windows-server-recipe.pkr.hcl`
 
-Output: json
-
-📝 Step 2: Create the Recipe File
-Create windows-server-recipe.pkr.hcl:
-
-hcl
-Copy
+```hcl
 packer {
   required_plugins {
     amazon = {
@@ -69,8 +75,8 @@ source "amazon-ebs" "windows-server" {
     }
     owners = ["amazon"]
   }
-  communicator = "winrm"
-  winrm_username = "Administrator"
+  communicator    = "winrm"
+  winrm_username  = "Administrator"
 }
 
 build {
@@ -80,37 +86,57 @@ build {
     script = "setup.ps1"
   }
 }
-Create setup.ps1:
+```
 
-powershell
-Copy
-# Install IIS (Web Server)
+### 📄 Create a PowerShell script: `setup.ps1`
+
+```powershell
+# Enable IIS (Web Server)
 Install-WindowsFeature -Name Web-Server -IncludeAllSubFeature
 
-# Create welcome page
-Add-Content -Path "C:\inetpub\wwwroot\index.html" -Value "<h1>Hello from your new server!</h1>"
-🚀 Step 3: Build Your Server
-Open PowerShell
+# Add a basic welcome page
+Add-Content -Path "C:\inetpub\wwwroot\index.html" -Value "<h1>Welcome to your auto-configured Windows Server!</h1>"
+```
 
-Run:
+---
 
-powershell
-Copy
+## 🚀 Step 3: Build Your Custom AMI
+
+In the folder with both files, open PowerShell and run:
+
+```powershell
 packer init .
 packer validate windows-server-recipe.pkr.hcl
 packer build windows-server-recipe.pkr.hcl
+```
+
 This will:
-🔸 Create a temporary server on AWS
-🔸 Install IIS automatically
-🔸 Save it as a reusable image
+- Launch a temporary Windows instance on AWS  
+- Automatically install IIS  
+- Save the final setup as a reusable AMI image
 
-🖥️ Step 4: Use Your New Server
-Go to AWS EC2 Console
+---
 
-Find your AMI under "Images → AMIs"
+## 🖥️ Step 4: Launch and Use Your Server
 
-Click "Launch instance"
+1. Log in to your [AWS EC2 Console](https://console.aws.amazon.com/ec2)  
+2. Go to **Images → AMIs** in the left sidebar  
+3. Select your custom AMI and click **Launch Instance**  
+4. Choose your instance type (e.g., `t2.large`) and complete the wizard  
+5. Connect via RDP (Remote Desktop Protocol) using the instance’s public IP  
+6. Visit your server in the browser:  
+   ```
+   http://<your-server-ip>
+   ```
 
-Connect via Remote Desktop (RDP)
+You should see your custom welcome message!
 
-Visit http://[your-server-ip] to see your welcome page!
+---
+
+## ✅ Done!
+
+You've successfully created a Windows Server on AWS that configures itself — ready for any future deployment.
+
+---
+```
+
