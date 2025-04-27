@@ -158,7 +158,7 @@ You should see: **API Gateway: shreyaa**
 <<<<<<< HEAD
 
 =======
-![App Screenshot](./Screenshot (3460).png)
+
 >>>>>>> 2cd6e1f97903d3e85abce5a83231cc69d3254b8f
 
 
