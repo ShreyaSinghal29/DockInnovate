@@ -1,4 +1,4 @@
-
+Link to LiveDemo: [https://titanic-pred-nvsaq4bzq2j5hff9ddnrfr.streamlit.app/]
 
 ---
 
