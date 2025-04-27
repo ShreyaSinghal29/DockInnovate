@@ -155,7 +155,8 @@ http://localhost:8080
 ```
 You should see: **API Gateway: shreyaa**
 
-![Alt text](C:\Users\HP\DockInnovate\DockInnovate\Swarm Orchestrator Microservices Deployment\Screenshot (3460).png)
+![App Screenshot](./Screenshot (3460).png)
+
 
 
 ## 🔄 Step 8: Scaling the Services
