@@ -1,7 +1,4 @@
-Perfect, thanks for clarifying!  
-I'll **rewrite** everything so it looks different, set the **PostgreSQL user** as `shreya` instead of `tarak`, and change the **Streamlit port** (I'll use `8502` instead of `8501`).
 
-Here's the **updated version**:
 
 ---
 
@@ -131,6 +128,3 @@ This setup offers a **clean, portable, and scalable** solution for full-stack da
 
 ---
 
-Would you also like me to **rewrite your `main.py` code** (with a **better UI** to match this new theme)?  
-I can do that next! 🎨🚀  
-Should I continue?
