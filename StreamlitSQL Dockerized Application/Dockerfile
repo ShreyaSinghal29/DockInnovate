@@ -1,9 +1,15 @@
-FROM python:3.9
+FROM python:3.9-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy app files
+# Install system dependencies needed for psycopg2
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy your app files
 COPY main.py .
 
 # Install required Python packages
