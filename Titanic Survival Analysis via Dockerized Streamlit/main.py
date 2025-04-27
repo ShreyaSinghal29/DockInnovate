@@ -3,60 +3,83 @@ import pandas as pd
 import joblib
 
 # Load the trained model
-model = joblib.load('titanic_model.pkl')
+try:
+    model = joblib.load('titanic_model.pkl')
+except Exception as e:
+    st.error(f"Error loading model: {e}")
+    st.stop()
 
-# Set Streamlit Page Config (MUST be the first command)
-st.set_page_config(page_title="Titanic Survival Prediction", layout="wide")
+# Page Configuration
+st.set_page_config(page_title="Will You Survive? | Titanic Predictor", layout="centered")
 
-# Custom CSS for Styling
+# Custom Styling
 st.markdown(
     """
     <style>
-    .title { color: #4a90e2; font-size: 48px; font-weight: 600; text-align: center; }
-    .subtitle { color: #4a5568; font-size: 20px; text-align: center; font-style: italic; margin-bottom: 30px; }
-    .form-container { background-color: #ffffff; border-radius: 12px; padding: 35px; 
-                      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); max-width: 800px; 
-                      margin: auto; text-align: center; }
+    .header {
+        font-size: 44px;
+        font-weight: bold;
+        color: #2E86C1;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+    .subtext {
+        font-size: 18px;
+        text-align: center;
+        color: #555;
+        font-style: italic;
+        margin-bottom: 40px;
+    }
+    .input-section {
+        background: #f2f6fc;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
+    }
     </style>
-    """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True
+)
 
-# Title & Subtitle
-st.markdown('<div class="title">Titanic Survival Prediction</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Enter passenger details below to predict survival chances.</div>', unsafe_allow_html=True)
+# Header
+st.markdown('<div class="header">🚢 Titanic: Will You Survive?</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtext">Fill out the details and find out your fate!</div>', unsafe_allow_html=True)
 
-# Input Fields
+# Input Form
 with st.container():
-    col1, col2 = st.columns(2)
+    with st.form(key="survival_form"):
+        st.markdown('<div class="input-section">', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
 
-    with col1:
-        pclass = st.selectbox("Passenger Class (Pclass)", [1, 2, 3])
-        sex = st.selectbox("Sex", ['male', 'female'])
-        age = st.slider("Age", 0, 80, 25)
+        with col1:
+            pclass = st.selectbox("Ticket Class", options=[1, 2, 3], index=2)
+            age = st.slider("Passenger Age", min_value=0, max_value=80, value=30)
+            sex = st.radio("Gender", options=["male", "female"], horizontal=True)
 
-    with col2:
-        sibsp = st.number_input("Siblings/Spouses Aboard (SibSp)", 0, 10, 0)
-        parch = st.number_input("Parents/Children Aboard (Parch)", 0, 10, 0)
-        fare = st.slider("Fare", 0, 500, 20)
+        with col2:
+            sibsp = st.number_input("Siblings/Spouse Aboard", min_value=0, max_value=10, value=0)
+            parch = st.number_input("Parents/Children Aboard", min_value=0, max_value=10, value=0)
+            fare = st.slider("Ticket Fare ($)", min_value=0, max_value=500, value=50)
 
-# Prediction Button
-if st.button("Predict Survival"):
-    with st.spinner("Predicting..."):
+        submitted = st.form_submit_button("Predict 🎯")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+# Prediction Logic
+if submitted:
+    with st.spinner("Analyzing your survival chances..."):
         try:
-            sex_binary = 1 if sex == 'female' else 0
-            input_data = pd.DataFrame([[pclass, sex_binary, age, sibsp, parch, fare]], 
-                                      columns=['Pclass', 'Sex', 'Age', 'Siblings/Spouses Aboard', 
-                                               'Parents/Children Aboard', 'Fare'])
-
-            # Make Prediction
+            sex_binary = 1 if sex == "female" else 0
+            input_data = pd.DataFrame(
+                [[pclass, sex_binary, age, sibsp, parch, fare]],
+                columns=['Pclass', 'Sex', 'Age', 'Siblings/Spouses Aboard', 'Parents/Children Aboard', 'Fare']
+            )
             prediction = model.predict(input_data)
-            result = "Survived" if prediction[0] == 1 else "Did not survive"
+            outcome = "🎉 You would have survived!" if prediction[0] == 1 else "😢 Unfortunately, you wouldn't survive."
 
-            # Display Result
-            if result == "Survived":
-                st.success(f"✅ {result}")
+            if prediction[0] == 1:
+                st.success(outcome)
             else:
-                st.error(f"❌ {result}")
+                st.error(outcome)
 
-        except Exception as e:
-            st.error(f"⚠️ Prediction Error: {e}")
-
+        except Exception as error:
+            st.error(f"Prediction failed due to: {error}")
