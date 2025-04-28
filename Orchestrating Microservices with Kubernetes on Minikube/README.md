@@ -1,15 +1,25 @@
-# Microservices Orchestration with Minikube & Kubernetes ☸️
 
-This project demonstrates a basic microservices architecture using Minikube and Kubernetes. It includes an API Gateway and a Backend Service, showcasing how to containerize applications and deploy them in a Kubernetes cluster.
 
-## Prerequisites
+---
 
-Before you begin, ensure you have the following installed:
-- [Minikube](https://minikube.sigs.k8s.io/docs/start/) - For running a local Kubernetes cluster
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) - For interacting with the Kubernetes cluster
-- [Docker](https://docs.docker.com/get-docker/) - For building container images
+```markdown
+# ☸️ Microservices Orchestration with Minikube & Kubernetes
 
-## Project Structure
+This project demonstrates a simple microservices setup using **Minikube** and **Kubernetes**, featuring an **API Gateway** and a **Backend Service**. It focuses on containerization and deploying applications within a Kubernetes cluster.
+
+---
+
+## 📋 Prerequisites
+
+Make sure you have the following installed on your system:
+
+- **Minikube** — Local Kubernetes cluster
+- **kubectl** — Kubernetes command-line tool
+- **Docker** — For building container images
+
+---
+
+## 📂 Project Structure
 
 ```
 .
@@ -27,168 +37,191 @@ Before you begin, ensure you have the following installed:
     └── api-gateway.yaml
 ```
 
-## Step-by-Step Guide (Use all the commands in bash terminal)
+---
 
-### 1. Start Minikube
+## 🚀 Step-by-Step Deployment
 
-First, start your Minikube cluster:
+All commands should be run in your bash terminal.
+
+### 1️⃣ Start Minikube
+
+Start a local Kubernetes cluster:
 
 ```bash
 minikube start
 ```
-<p align="center">
-  <img src="https://github.com/TarakKatoch/My-Docker-Dockyard/blob/06b8cd7b508371feb76430430aad0e4cf80f8ed7/Microservices%20Orchestration%20with%20Minikube%20%26%20Kubernetes/images/Screenshot%202025-03-21%20014343.png" alt="Screenshot">
-</p>
 
-### 2. Set Up Docker Environment
+---
 
-Configure Docker to use Minikube's Docker daemon:
+### 2️⃣ Configure Docker to Use Minikube's Daemon
+
+Connect Docker to Minikube’s internal Docker environment:
 
 ```bash
 eval $(minikube -p minikube docker-env)
 ```
 
-### 3. Build and Deploy Services
+---
+
+### 3️⃣ Build and Deploy the Microservices
 
 #### 3.1 Backend Service
 
-1. Navigate to the backend directory:
-```bash
-cd backend
-```
+- Move into the backend directory:
 
-2. Build the Docker image:
-```bash
-docker build -t backend-service .
-```
+  ```bash
+  cd backend
+  ```
 
-3. Deploy to Kubernetes:
-```bash
-kubectl apply -f ../kubernetes/backend-service.yaml
-```
-<p align="center">
-  <img src="https://github.com/TarakKatoch/My-Docker-Dockyard/blob/06b8cd7b508371feb76430430aad0e4cf80f8ed7/Microservices%20Orchestration%20with%20Minikube%20%26%20Kubernetes/images/Screenshot%202025-03-21%20014834.png" alt="Screenshot">
-</p>
+- Build the Docker image:
+
+  ```bash
+  docker build -t backend-service .
+  ```
+
+- Deploy the backend service to Kubernetes:
+
+  ```bash
+  kubectl apply -f ../kubernetes/backend-service.yaml
+  ```
+
+---
 
 #### 3.2 API Gateway
 
-1. Navigate to the api-gateway directory:
-```bash
-cd ../api-gateway
-```
+- Navigate to the API Gateway directory:
 
-2. Build the Docker image:
-```bash
-docker build -t api-gateway .
-```
+  ```bash
+  cd ../api-gateway
+  ```
 
-3. Deploy to Kubernetes:
-```bash
-kubectl apply -f ../kubernetes/api-gateway.yaml
-```
-<p align="center">
-  <img src="https://github.com/TarakKatoch/My-Docker-Dockyard/blob/06b8cd7b508371feb76430430aad0e4cf80f8ed7/Microservices%20Orchestration%20with%20Minikube%20%26%20Kubernetes/images/Screenshot%202025-03-21%20015036.png" alt="Screenshot">
-</p>
+- Build the Docker image:
 
-### 4. Verify Deployment
+  ```bash
+  docker build -t api-gateway .
+  ```
 
-Check the status of your deployments:
+- Deploy the API Gateway to Kubernetes:
+
+  ```bash
+  kubectl apply -f ../kubernetes/api-gateway.yaml
+  ```
+
+---
+
+### 4️⃣ Verify Deployments
+
+Check the status of your services and deployments:
 
 ```bash
 kubectl get deployments
 kubectl get services
 ```
-<p align="center">
-  <img src="https://github.com/TarakKatoch/My-Docker-Dockyard/blob/06b8cd7b508371feb76430430aad0e4cf80f8ed7/Microservices%20Orchestration%20with%20Minikube%20%26%20Kubernetes/images/Screenshot%202025-03-21%20020054.png" alt="Screenshot">
-</p>
 
-### 5. Access the Application
+---
 
-To access the API Gateway service:
+### 5️⃣ Access the Application
+
+To open the API Gateway in your browser:
 
 ```bash
 minikube service api-gateway
 ```
-This will open your browser to the API Gateway endpoint, which will display a message from the backend service.
 
-<p align="center">
-  <img src="https://github.com/TarakKatoch/My-Docker-Dockyard/blob/06b8cd7b508371feb76430430aad0e4cf80f8ed7/Microservices%20Orchestration%20with%20Minikube%20%26%20Kubernetes/images/Screenshot%202025-03-21%20015902.png" alt="Screenshot">
-</p>
-<p align="center">
-  <img src="https://github.com/TarakKatoch/My-Docker-Dockyard/blob/06b8cd7b508371feb76430430aad0e4cf80f8ed7/Microservices%20Orchestration%20with%20Minikube%20%26%20Kubernetes/images/Screenshot%202025-03-21%20020139.png" alt="Screenshot">
-</p>
+This will route you to the API Gateway endpoint, where you can interact with the backend service.
 
-### 6. Monitoring and Debugging
+---
 
-Useful commands for monitoring and debugging:
+### 6️⃣ Monitoring and Debugging
+
+Useful commands for troubleshooting:
 
 ```bash
-# View logs of the API Gateway
+# Check API Gateway logs
 kubectl logs deployment/api-gateway
 
-# View logs of the Backend Service
+# Check Backend Service logs
 kubectl logs deployment/backend-service
 
-# Get detailed information about pods
+# Describe pods for more details
 kubectl describe pods
 ```
 
-### 7. Clean Up
+---
 
-When you're done, clean up the resources:
+### 7️⃣ Cleaning Up Resources
+
+To remove deployments and stop the cluster:
 
 ```bash
-# Delete deployments and services
+# Delete the deployed services
 kubectl delete -f kubernetes/api-gateway.yaml
 kubectl delete -f kubernetes/backend-service.yaml
 
 # Stop Minikube
 minikube stop
 ```
-<p align="center">
-  <img src="https://github.com/TarakKatoch/My-Docker-Dockyard/blob/06b8cd7b508371feb76430430aad0e4cf80f8ed7/Microservices%20Orchestration%20with%20Minikube%20%26%20Kubernetes/images/Screenshot%202025-03-21%20020704.png" alt="Screenshot">
-</p>
 
-## Architecture Overview
+---
 
-### Components
+## 🏛️ Architecture Overview
 
-1. **API Gateway**
-   - Acts as the entry point for all client requests
-   - Routes requests to appropriate backend services
-   - Port: 8080
+### 🔹 Components
 
-2. **Backend Service**
-   - Handles business logic
-   - Returns simple responses
-   - Port: 5000
+- **API Gateway**
+  - Serves as the single entry point for clients.
+  - Routes requests to the backend service.
+  - Exposes **port 8080**.
 
-### Communication Flow
+- **Backend Service**
+  - Handles core business logic.
+  - Sends responses to the API Gateway.
+  - Listens on **port 5000**.
 
-1. Client → API Gateway (8080)
-2. API Gateway → Backend Service (5000)
-3. Backend Service → API Gateway
-4. API Gateway → Client
+---
 
-## Troubleshooting
+### 🔄 Communication Flow
 
-Common issues and solutions:
+```
+Client → API Gateway (8080) → Backend Service (5000) → API Gateway → Client
+```
 
-1. **Images not found**
-   - Ensure you're using Minikube's Docker daemon
-   - Verify image names in Kubernetes manifests
+---
 
-2. **Services not accessible**
-   - Check if pods are running: `kubectl get pods`
-   - Verify service types and ports
-   - Check logs for errors
+## 🛠 Troubleshooting
 
-3. **Minikube issues**
-   - Restart Minikube: `minikube stop && minikube start`
-   - Reset cluster: `minikube delete && minikube start`
+- **Docker Images Not Found**  
+  - Ensure you are building images using Minikube’s Docker environment.
+  - Validate the image names in the Kubernetes YAML files.
 
-## Additional Resources
+- **Services Not Reachable**  
+  - Confirm pods are running: `kubectl get pods`
+  - Double-check service ports and types.
+  - Inspect pod logs for errors.
 
-- [Minikube Documentation](https://minikube.sigs.k8s.io/docs/)
-- [Kubernetes Documentation](https://kubernetes.io/docs/)
-- [Docker Documentation](https://docs.docker.com/) 
+- **Minikube Issues**  
+  - Restart Minikube if necessary:
+
+    ```bash
+    minikube stop && minikube start
+    ```
+
+  - Reset Minikube:
+
+    ```bash
+    minikube delete && minikube start
+    ```
+
+---
+
+## 📚 Additional Resources
+
+- [Minikube Official Documentation](https://minikube.sigs.k8s.io/docs/)
+- [Kubernetes Official Documentation](https://kubernetes.io/docs/)
+- [Docker Official Documentation](https://docs.docker.com/)
+
+---
+```
+
+---
+
